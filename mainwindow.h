@@ -26,11 +26,14 @@
 #include <QFileDialog>
 #include <QDir>
 #include <QTimer>
+#include <QImage>
+#include <QPainter>
 #include <iostream>
 
 #include <opencv2/imgcodecs/imgcodecs.hpp>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
+#include <opencv2/opencv.hpp>
 
 namespace Ui {
 class MainWindow;
@@ -57,8 +60,23 @@ private:
 
     cv::VideoCapture cap;
     cv::Mat pic;
+    cv::Mat tmpMat;
 
     QTimer timer;
+    QImage qimg;
+
+    void paintEvent(QPaintEvent*)
+    {
+        //Display the frame, in this case a group of frames(a video)
+
+        QPainter painter(this);
+
+        painter.drawImage(QPoint(0,0),qimg);
+
+        painter.end();
+    }
+
+    void showFrame(const cv::Mat& frame);
 
     // The function counts the photos you took and places the photo number as the name
 

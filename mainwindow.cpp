@@ -73,7 +73,30 @@ void MainWindow::on_timeout()
 
     cap.read(pic);
 
+    showFrame(pic);
+
     // If the pushButton has been pressed a signal is emitted and initializes your private slot capture()
 
     connect(ui->picSelfBtn,&QPushButton::clicked,this,&MainWindow::capture);
+}
+
+void MainWindow::showFrame(const cv::Mat &frame)
+{
+    //Convert the image to the to RGB888 format, a format Qt supports
+
+    cv::cvtColor(frame,tmpMat,CV_BGR2RGB);
+
+    //You need keep tmpMat in memory for QImage
+
+    assert(tmpMat.isContinuous());
+
+    // Set the QImage variable with the same size of tmpMat and copy the data of tmpMat into qimg
+
+    qimg = QImage(tmpMat.data,tmpMat.cols,tmpMat.rows,tmpMat.cols*3,QImage::Format_RGB888);
+
+    // Set fix the size of the video stream
+
+    this->setFixedSize(frame.cols,frame.rows);
+
+    repaint();
 }
