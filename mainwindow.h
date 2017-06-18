@@ -61,6 +61,7 @@ private:
     cv::VideoCapture cap;
     cv::Mat pic;
     cv::Mat tmpMat;
+    cv::Mat flpPic;
 
     QTimer timer;
     QImage qimg;

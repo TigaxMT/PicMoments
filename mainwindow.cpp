@@ -59,9 +59,17 @@ void MainWindow::capture()
 
     cap >> pic;
 
+    //Flip the frame
+
+    cv::flip(pic,flpPic,1);
+
     // And save it in the path created on intToString function
 
-    cv::imwrite(intToString(),pic);
+    cv::imwrite(intToString(),flpPic);
+
+    // Show a message in the statusbar for 1 sec
+
+    ui->statusBar->showMessage("Pic Captured",1000);
 
     pics++;
 }
@@ -73,7 +81,11 @@ void MainWindow::on_timeout()
 
     cap.read(pic);
 
-    showFrame(pic);
+    // Flip the frame
+
+    cv::flip(pic,flpPic,1);
+
+    showFrame(flpPic);
 
     // If the pushButton has been pressed a signal is emitted and initializes your private slot capture()
 
