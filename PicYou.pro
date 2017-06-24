@@ -1,14 +1,14 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2017-06-15T17:44:15
+# Project created by QtCreator 2017-06-25T00:45:40
 #
 #-------------------------------------------------
 
 QT       += core gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets multimedia multimediawidgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = PicSelf
+TARGET = PicYou
 TEMPLATE = app
 
 INCLUDEPATH += /usr/local/include/opencv

@@ -1,6 +1,6 @@
 /************************************************************************************************************
 *    											                                                            *
-*    PicSelf - Is a simple program to take photos. Written on C++ and using Opencv library and QT Framework *
+*    PicYou - Is a simple program to take photos. Written on C++ and using Opencv library and QT Framework *
 *											                                                                *
 *    Copyright (C) 2017  Tiago Martins                        				                                *
 *											                                                                *
@@ -40,9 +40,9 @@ MainWindow::MainWindow(QWidget *parent) :
     compression_params.push_back(CV_IMWRITE_JPEG_QUALITY);
     compression_params.push_back(95);
 
-    // Choose the directory you want the photos have saved
+    // Choose the directory you want the photos/videos have saved
 
-    picPath = QFileDialog::getExistingDirectory(this,"Directory to save your Pics",QDir::currentPath()).toStdString();
+    picPath = QFileDialog::getExistingDirectory(this,"Directory to save your Pics/Vids",QDir::currentPath()).toStdString();
 
     //when the timer times out the signal is emitted and the ontimeout() private slot is executed
 
@@ -63,7 +63,7 @@ void MainWindow::capture()
 {
     // must disconnect the pushButton signal, if not the program doesn't stop to take photos
 
-    ui->picSelfBtn->disconnect(ui->picSelfBtn,&QPushButton::clicked,this,&MainWindow::capture);
+    ui->picBtn->disconnect(ui->picBtn,&QPushButton::clicked,this,&MainWindow::capture);
 
     // Capture a frame to Mat Image
 
@@ -99,7 +99,7 @@ void MainWindow::on_timeout()
 
     // If the pushButton has been pressed a signal is emitted and initializes your private slot capture()
 
-    connect(ui->picSelfBtn,&QPushButton::clicked,this,&MainWindow::capture);
+    connect(ui->picBtn,&QPushButton::clicked,this,&MainWindow::capture);
 }
 
 void MainWindow::showFrame(const cv::Mat &frame)
