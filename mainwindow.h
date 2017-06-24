@@ -30,9 +30,10 @@
 #include <QPainter>
 #include <iostream>
 
-#include <opencv2/imgcodecs/imgcodecs.hpp>
-#include <opencv2/core/core.hpp>
-#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/core.hpp>
+#include <opencv2/videoio.hpp>
+#include <opencv2/imgproc.hpp>
+#include <opencv2/highgui.hpp>
 #include <opencv2/opencv.hpp>
 
 namespace Ui {
@@ -62,6 +63,8 @@ private:
     cv::Mat pic;
     cv::Mat tmpMat;
     cv::Mat flpPic;
+
+    std::vector<int> compression_params;
 
     QTimer timer;
     QImage qimg;
@@ -95,7 +98,7 @@ private:
 
         tmp +="/";
         tmp += print.str();
-        tmp += ".bmp";
+        tmp += ".jpg";
 
         return tmp;
     }

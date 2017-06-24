@@ -27,8 +27,6 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     MainWindow w;
 
-    w.resize(212,119);
-
     w.setWindowTitle("PicSelf");
 
     w.show();

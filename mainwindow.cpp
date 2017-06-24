@@ -30,6 +30,16 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    if(!cap.isOpened())
+    {
+        return;
+    }
+
+    // This vector store the type of image quality (JPEG quality from 0 to 100, 95 is the default value)
+
+    compression_params.push_back(CV_IMWRITE_JPEG_QUALITY);
+    compression_params.push_back(95);
+
     // Choose the directory you want the photos have saved
 
     picPath = QFileDialog::getExistingDirectory(this,"Directory to save your Pics",QDir::currentPath()).toStdString();
@@ -65,7 +75,7 @@ void MainWindow::capture()
 
     // And save it in the path created on intToString function
 
-    cv::imwrite(intToString(),flpPic);
+    cv::imwrite(intToString(),flpPic,compression_params);
 
     // Show a message in the statusbar for 1 sec
 
