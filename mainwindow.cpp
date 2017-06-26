@@ -31,6 +31,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->menuBar->setStyleSheet("color: white");
+    ui->stopRecBtn->setVisible(false);
 
     if(!cap.isOpened())
     {
@@ -52,7 +53,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //call the timer every 10 ms
 
-    timer.start(0);
+    timer.start(10);
 
 }
 
@@ -91,15 +92,15 @@ void MainWindow::record()
 {
     if(!isRec)
     {
+        ui->picBtn->disconnect(ui->recBtn,&QPushButton::clicked,this,&MainWindow::record);
+        ui->stopRecBtn->setVisible(true);
+        ui->recBtn->setVisible(false);
+
         // Size of the frame
         cv::Size S = cv::Size((int)cap.get(cv::CAP_PROP_FRAME_WIDTH),
-                              (int)cap.get(cv::CAP_PROP_FRAME_HEIGHT));
+                              (int)cap.get(cv::CAP_PROP_FRAME_HEIGHT)); 
 
-        // Codec for the video
-
-        int ex = static_cast<int>(cap.get(cv::CAP_PROP_FOURCC));
-
-        rec.open(intToStringRec(),ex,cap.get(cv::CAP_PROP_FPS),S,true);
+        rec.open(intToStringRec(),CV_FOURCC('M','J','P','G'),15,S,true);
 
         if(!rec.isOpened())
             return;
@@ -107,17 +108,17 @@ void MainWindow::record()
         isRec=true;
     }
 
-    rec << flpPic;
-
-    connect(ui->recBtn,&QPushButton::clicked,this,&MainWindow::stopRecord);
+    rec.write(flpPic);
 }
 
 void MainWindow::stopRecord()
 {
-    ui->picBtn->disconnect(ui->recBtn,&QPushButton::clicked,this,&MainWindow::record);
-    ui->picBtn->disconnect(ui->recBtn,&QPushButton::clicked,this,&MainWindow::stopRecord);
+    ui->picBtn->disconnect(ui->stopRecBtn,&QPushButton::clicked,this,&MainWindow::stopRecord);
+    ui->stopRecBtn->setVisible(false);
+    ui->recBtn->setVisible(true);
 
     isRec = false;
+    rec.release();
     recs++;
 }
 
@@ -140,6 +141,7 @@ void MainWindow::on_timeout()
 
     connect(ui->picBtn,&QPushButton::clicked,this,&MainWindow::capture);
     connect(ui->recBtn,&QPushButton::clicked,this,&MainWindow::record);
+    connect(ui->stopRecBtn,&QPushButton::clicked,this,&MainWindow::stopRecord);
 }
 
 void MainWindow::showFrame(const cv::Mat &frame)

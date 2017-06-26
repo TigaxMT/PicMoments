@@ -21,7 +21,7 @@
     <property name="geometry">
      <rect>
       <x>200</x>
-      <y>350</y>
+      <y>340</y>
       <width>91</width>
       <height>81</height>
      </rect>
@@ -68,7 +68,7 @@
     <property name="geometry">
      <rect>
       <x>350</x>
-      <y>350</y>
+      <y>340</y>
       <width>91</width>
       <height>81</height>
      </rect>
@@ -77,7 +77,39 @@
      <cursorShape>PointingHandCursor</cursorShape>
     </property>
     <property name="toolTip">
-     <string>Record</string>
+     <string>Start Recording</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border: 0px;</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset resource="icons.qrc">
+      <normaloff>:/icons/icons/record.png</normaloff>:/icons/icons/record.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>81</width>
+      <height>81</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="stopRecBtn">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>340</y>
+      <width>91</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="toolTip">
+     <string>Stop Recording</string>
     </property>
     <property name="styleSheet">
      <string notr="true">border: 0px;</string>
