@@ -26,9 +26,11 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     cap(0),
+    isRec(false),
     timer(this)
 {
     ui->setupUi(this);
+    ui->menuBar->setStyleSheet("color: white");
 
     if(!cap.isOpened())
     {
@@ -50,7 +52,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //call the timer every 10 ms
 
-    timer.start(10);
+    timer.start(0);
 
 }
 
@@ -77,13 +79,47 @@ void MainWindow::capture()
 
     cv::imwrite(intToString(),flpPic,compression_params);
 
-    // Show a message in the statusbar for 1 sec
+    // Show a message in the statusbar for 1/2 sec
 
-    ui->statusBar->showMessage("Pic Captured",1000);
+    ui->statusBar->setStyleSheet("color: white");
+    ui->statusBar->showMessage("Pic Captured",500);
 
     pics++;
 }
 
+void MainWindow::record()
+{
+    if(!isRec)
+    {
+        // Size of the frame
+        cv::Size S = cv::Size((int)cap.get(cv::CAP_PROP_FRAME_WIDTH),
+                              (int)cap.get(cv::CAP_PROP_FRAME_HEIGHT));
+
+        // Codec for the video
+
+        int ex = static_cast<int>(cap.get(cv::CAP_PROP_FOURCC));
+
+        rec.open(intToStringRec(),ex,cap.get(cv::CAP_PROP_FPS),S,true);
+
+        if(!rec.isOpened())
+            return;
+
+        isRec=true;
+    }
+
+    rec << flpPic;
+
+    connect(ui->recBtn,&QPushButton::clicked,this,&MainWindow::stopRecord);
+}
+
+void MainWindow::stopRecord()
+{
+    ui->picBtn->disconnect(ui->recBtn,&QPushButton::clicked,this,&MainWindow::record);
+    ui->picBtn->disconnect(ui->recBtn,&QPushButton::clicked,this,&MainWindow::stopRecord);
+
+    isRec = false;
+    recs++;
+}
 
 void MainWindow::on_timeout()
 {
@@ -99,7 +135,11 @@ void MainWindow::on_timeout()
 
     // If the pushButton has been pressed a signal is emitted and initializes your private slot capture()
 
+    if(isRec)
+        record();
+
     connect(ui->picBtn,&QPushButton::clicked,this,&MainWindow::capture);
+    connect(ui->recBtn,&QPushButton::clicked,this,&MainWindow::record);
 }
 
 void MainWindow::showFrame(const cv::Mat &frame)

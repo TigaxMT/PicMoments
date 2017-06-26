@@ -33,6 +33,7 @@
 #include <opencv2/core.hpp>
 #include <opencv2/videoio.hpp>
 #include <opencv2/imgproc.hpp>
+#include <opencv2/imgcodecs.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/opencv.hpp>
 
@@ -51,6 +52,8 @@ public:
 
 private slots:
     void capture();
+    void record();
+    void stopRecord();
     void on_timeout();
 
 private:
@@ -58,8 +61,11 @@ private:
 
     std::string picPath;
     int pics = 0; // Count the photos you took
+    int recs = 0; // Count the videos you record
+    bool isRec;
 
     cv::VideoCapture cap;
+    cv::VideoWriter rec;
     cv::Mat pic;
     cv::Mat tmpMat;
     cv::Mat flpPic;
@@ -99,6 +105,25 @@ private:
         tmp +="/";
         tmp += print.str();
         tmp += ".jpg";
+
+        return tmp;
+    }
+
+    inline std::string intToStringRec()
+    {
+        // It was used a stringstream to do the conversion int to string easily
+
+        std::stringstream print;
+
+        // Create a temporary string for not change the string where path is
+
+        std::string tmp = picPath;
+
+        print << recs; // converting a integer to a string
+
+        tmp +="/";
+        tmp += print.str();
+        tmp += ".avi";
 
         return tmp;
     }
