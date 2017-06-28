@@ -43,9 +43,15 @@ MainWindow::MainWindow(QWidget *parent) :
     compression_params.push_back(CV_IMWRITE_JPEG_QUALITY);
     compression_params.push_back(95);
 
-    // Choose the directory you want the photos/videos have saved
+    // Choose the directory you want the photos/videos have saved.
 
-    picPath = QFileDialog::getExistingDirectory(this,"Directory to save your Pics/Vids",QDir::currentPath()).toStdString();
+    while(1)
+    {
+        picPath = QFileDialog::getExistingDirectory(this,"Directory to save your Pics/Vids",QDir::currentPath()).toStdString();
+
+        if(!picPath.empty())
+            break;
+    }
 
     //when the timer times out the signal is emitted and the ontimeout() private slot is executed
 
