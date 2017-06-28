@@ -68,22 +68,32 @@ void MainWindow::capture()
 
     ui->picBtn->disconnect(ui->picBtn,&QPushButton::clicked,this,&MainWindow::capture);
 
-    // Capture a frame to Mat Image
+    if(ui->actionCanny_Edges->isChecked())
+    {
+        cv::imwrite(intToString(),flpPic,compression_params);
 
-    cap >> pic;
+        ui->statusBar->setStyleSheet("color: red");
+        ui->statusBar->showMessage("Pic Captured",500);
+    }
+    else
+    {
+        // Capture a frame to Mat Image
 
-    //Flip the frame
+        cap >> pic;
 
-    cv::flip(pic,flpPic,1);
+        //Flip the frame
 
-    // And save it in the path created on intToString function
+        cv::flip(pic,flpPic,1);
 
-    cv::imwrite(intToString(),flpPic,compression_params);
+        // And save it in the path created on intToString function
 
-    // Show a message in the statusbar for 1/2 sec
+        cv::imwrite(intToString(),flpPic,compression_params);
 
-    ui->statusBar->setStyleSheet("color: white");
-    ui->statusBar->showMessage("Pic Captured",500);
+        // Show a message in the statusbar for 1/2 sec
+
+        ui->statusBar->setStyleSheet("color: white");
+        ui->statusBar->showMessage("Pic Captured",500);
+    }
 
     pics++;
 }
@@ -98,9 +108,12 @@ void MainWindow::record()
 
         // Size of the frame
         cv::Size S = cv::Size((int)cap.get(cv::CAP_PROP_FRAME_WIDTH),
-                              (int)cap.get(cv::CAP_PROP_FRAME_HEIGHT)); 
+                              (int)cap.get(cv::CAP_PROP_FRAME_HEIGHT));
 
-        rec.open(intToStringRec(),CV_FOURCC('M','J','P','G'),15,S,true);
+        if(ui->actionCanny_Edges->isChecked())
+            rec.open(intToStringRec(),CV_FOURCC('M','J','P','G'),15,S,false);
+        else
+            rec.open(intToStringRec(),CV_FOURCC('M','J','P','G'),15,S,true);
 
         if(!rec.isOpened())
             return;
@@ -128,11 +141,12 @@ void MainWindow::on_timeout()
 
     cap.read(pic);
 
-    // Flip the frame
+    // Check if any effect are checked
 
-    cv::flip(pic,flpPic,1);
-
-    showFrame(flpPic);
+    if(ui->actionCanny_Edges->isChecked())
+        cannyEdge();
+    else
+        noEffects();
 
     // If the pushButton has been pressed a signal is emitted and initializes your private slot capture()
 
@@ -142,13 +156,49 @@ void MainWindow::on_timeout()
     connect(ui->picBtn,&QPushButton::clicked,this,&MainWindow::capture);
     connect(ui->recBtn,&QPushButton::clicked,this,&MainWindow::record);
     connect(ui->stopRecBtn,&QPushButton::clicked,this,&MainWindow::stopRecord);
+    connect(ui->actionCanny_Edges,&QAction::triggered,this,&MainWindow::cannyEdge);
+}
+
+void MainWindow::noEffects()
+{
+    // Flip the frame
+
+    cv::flip(pic,flpPic,1);
+
+    showFrame(flpPic);
+}
+
+void MainWindow::cannyEdge()
+{
+
+    ui->menuBar->setStyleSheet("color: red");
+    ui->actionCanny_Edges->disconnect(ui->actionCanny_Edges,&QAction::triggered,this,&MainWindow::cannyEdge);
+
+    cv::Mat pic_gray;
+
+    cv::flip(pic,flpPic,1);
+
+    cv::cvtColor(flpPic,pic_gray,cv::COLOR_BGR2GRAY);
+
+    flpPic.release();
+
+    cv::blur(pic_gray,flpPic,cv::Size(3,3));
+
+    cv::Canny(flpPic,flpPic,1,1*3,3);
+
+    showFrame(flpPic);
 }
 
 void MainWindow::showFrame(const cv::Mat &frame)
 {
     //Convert the image to the to RGB888 format, a format Qt supports
 
-    cv::cvtColor(frame,tmpMat,CV_BGR2RGB);
+    switch(frame.type())
+    {
+        case CV_8UC1: cv::cvtColor(frame,tmpMat,CV_GRAY2RGB); break;
+
+        case CV_8UC3: cv::cvtColor(frame,tmpMat,CV_BGR2RGB); break;
+    }
 
     //You need keep tmpMat in memory for QImage
 

@@ -56,6 +56,9 @@ private slots:
     void stopRecord();
     void on_timeout();
 
+    void noEffects();
+    void cannyEdge();
+
 private:
     Ui::MainWindow *ui;
 
