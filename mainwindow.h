@@ -37,6 +37,8 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/opencv.hpp>
 
+#include "threshold.h"
+
 namespace Ui {
 class MainWindow;
 }
@@ -61,11 +63,14 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    Threshold *threshCtrl;
 
     std::string picPath;
     int pics = 0; // Count the photos you took
     int recs = 0; // Count the videos you record
+    int threshold = 0;
     bool isRec;
+    bool threshExec = true;
 
     cv::VideoCapture cap;
     cv::VideoWriter rec;

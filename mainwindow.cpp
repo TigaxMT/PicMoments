@@ -146,8 +146,18 @@ void MainWindow::on_timeout()
     if(ui->actionCanny_Edges->isChecked())
         cannyEdge();
     else
-        noEffects();
+    {
+        if(!threshExec)
+        {
+            threshCtrl->close();
 
+            threshExec = true;
+
+            ui->menuBar->setStyleSheet("color: white");
+        }
+
+        noEffects();
+    }
     // If the pushButton has been pressed a signal is emitted and initializes your private slot capture()
 
     if(isRec)
@@ -170,9 +180,25 @@ void MainWindow::noEffects()
 
 void MainWindow::cannyEdge()
 {
+    // Create and show QDialog to adjust the threshold value
+
+    if(threshExec)
+    {
+        threshCtrl = new Threshold(this);
+
+        threshCtrl->setWindowTitle("Adjust Threshold");
+
+        threshCtrl->show();
+
+        threshExec = false;
+    }
+
+    threshold = threshCtrl->getSliderVal();
 
     ui->menuBar->setStyleSheet("color: red");
     ui->actionCanny_Edges->disconnect(ui->actionCanny_Edges,&QAction::triggered,this,&MainWindow::cannyEdge);
+
+    // Start the algorithm to CannyEdge effect
 
     cv::Mat pic_gray;
 
@@ -184,7 +210,7 @@ void MainWindow::cannyEdge()
 
     cv::blur(pic_gray,flpPic,cv::Size(3,3));
 
-    cv::Canny(flpPic,flpPic,1,1*3,3);
+    cv::Canny(flpPic,flpPic,threshold,threshold*3,3);
 
     showFrame(flpPic);
 }
