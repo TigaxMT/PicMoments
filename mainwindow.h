@@ -28,6 +28,7 @@
 #include <QTimer>
 #include <QImage>
 #include <QPainter>
+
 #include <iostream>
 
 #include <opencv2/core.hpp>
@@ -38,6 +39,7 @@
 #include <opencv2/opencv.hpp>
 
 #include "threshold.h"
+#include "about.h"
 
 namespace Ui {
 class MainWindow;
@@ -51,11 +53,11 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-
 private slots:
     void capture();
     void record();
     void stopRecord();
+    void about();
     void on_timeout();
 
     void noEffects();
@@ -64,13 +66,15 @@ private slots:
 private:
     Ui::MainWindow *ui;
     Threshold *threshCtrl;
+    About *aboutDlg;
 
     std::string picPath;
     int pics = 0; // Count the photos you took
     int recs = 0; // Count the videos you record
     int threshold = 0;
-    bool isRec;
-    bool threshExec = true;
+    bool isRec = false;
+    bool threshExec = false;
+    bool aboutExec = false;
 
     cv::VideoCapture cap;
     cv::VideoWriter rec;

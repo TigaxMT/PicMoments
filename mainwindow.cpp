@@ -26,7 +26,6 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     cap(0),
-    isRec(false),
     timer(this)
 {
     ui->setupUi(this);
@@ -143,6 +142,20 @@ void MainWindow::stopRecord()
     recs++;
 }
 
+void MainWindow::about()
+{
+    if(!aboutExec)
+    {
+       aboutDlg = new About(this);
+
+       aboutDlg->show();
+
+       aboutExec = true;
+    }
+
+    ui->actionAbout_PicYou->disconnect(ui->actionAbout_PicYou,&QAction::triggered,this,&MainWindow::about);
+}
+
 void MainWindow::on_timeout()
 {
     // Start capture frames
@@ -155,11 +168,11 @@ void MainWindow::on_timeout()
         cannyEdge();
     else
     {
-        if(!threshExec)
+        if(threshExec)
         {
             threshCtrl->close();
 
-            threshExec = true;
+            threshExec = false;
 
             ui->menuBar->setStyleSheet("color: white");
         }
@@ -171,10 +184,14 @@ void MainWindow::on_timeout()
     if(isRec)
         record();
 
+    if(aboutDlg->dlgExecVal() == false)
+        aboutExec = false;
+
     connect(ui->picBtn,&QPushButton::clicked,this,&MainWindow::capture);
     connect(ui->recBtn,&QPushButton::clicked,this,&MainWindow::record);
     connect(ui->stopRecBtn,&QPushButton::clicked,this,&MainWindow::stopRecord);
     connect(ui->actionCanny_Edges,&QAction::triggered,this,&MainWindow::cannyEdge);
+    connect(ui->actionAbout_PicYou,&QAction::triggered,this,&MainWindow::about);
 }
 
 void MainWindow::noEffects()
@@ -190,7 +207,7 @@ void MainWindow::cannyEdge()
 {
     // Create and show QDialog to adjust the threshold value
 
-    if(threshExec)
+    if(!threshExec)
     {
         threshCtrl = new Threshold(this);
 
@@ -198,7 +215,7 @@ void MainWindow::cannyEdge()
 
         threshCtrl->show();
 
-        threshExec = false;
+        threshExec = true;
     }
 
     threshold = threshCtrl->getSliderVal();

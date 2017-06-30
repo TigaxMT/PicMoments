@@ -564,7 +564,14 @@
     </property>
     <addaction name="actionCanny_Edges"/>
    </widget>
+   <widget class="QMenu" name="menuOptions">
+    <property name="title">
+     <string>Options</string>
+    </property>
+    <addaction name="actionAbout_PicYou"/>
+   </widget>
    <addaction name="menuEffects"/>
+   <addaction name="menuOptions"/>
   </widget>
   <action name="actionCanny_Edges">
    <property name="checkable">
@@ -578,6 +585,11 @@
    </property>
    <property name="text">
     <string>Canny Edges</string>
+   </property>
+  </action>
+  <action name="actionAbout_PicYou">
+   <property name="text">
+    <string>About PicYou...</string>
    </property>
   </action>
  </widget>

@@ -29,15 +29,18 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    threshold.cpp
+    threshold.cpp \
+    about.cpp
 
 HEADERS += \
         mainwindow.h \
-    threshold.h
+    threshold.h \
+    about.h
 
 FORMS += \
         mainwindow.ui \
-    threshold.ui
+    threshold.ui \
+    about.ui
 
 RESOURCES += \
     icons.qrc
