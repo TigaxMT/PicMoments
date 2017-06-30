@@ -131,7 +131,7 @@ private:
 
         tmp +="/";
         tmp += print.str();
-        tmp += ".avi";
+        tmp += ".mp4";
 
         return tmp;
     }

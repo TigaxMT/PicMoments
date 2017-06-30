@@ -116,10 +116,12 @@ void MainWindow::record()
         cv::Size S = cv::Size((int)cap.get(cv::CAP_PROP_FRAME_WIDTH),
                               (int)cap.get(cv::CAP_PROP_FRAME_HEIGHT));
 
+        int fourcc = static_cast<int> (cap.get(cv::CAP_PROP_FOURCC));
+
         if(ui->actionCanny_Edges->isChecked())
-            rec.open(intToStringRec(),CV_FOURCC('M','J','P','G'),15,S,false);
+            rec.open(intToStringRec(),fourcc,15,S,false);
         else
-            rec.open(intToStringRec(),CV_FOURCC('M','J','P','G'),15,S,true);
+            rec.open(intToStringRec(),fourcc,15,S,true);
 
         if(!rec.isOpened())
             return;
