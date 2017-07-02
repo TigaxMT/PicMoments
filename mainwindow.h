@@ -1,6 +1,6 @@
 /************************************************************************************************************
 *    											                                                            *
-*    PicYou - Is a simple program to take photos. Written on C++ and using Opencv library and QT Framework *
+*    PicMoments - Is a simple program to take photos. Written on C++ and using Opencv library and QT Framework *
 *											                                                                *
 *    Copyright (C) 2017  Tiago Martins                        				                                *
 *											                                                                *
@@ -75,13 +75,14 @@ private:
 
     std::string picPath;
     std::string ext;
-    int pics = 0; // Count the photos you took
-    int recs = 0; // Count the videos you record
-    int threshold = 0;
-    bool isRec = false;
-    bool threshExec = false;
-    bool aboutExec = false;
-    bool vidDlgExec = false;
+    double threshold;
+    int pics; // Count the photos you took
+    int recs; // Count the videos you record
+    int fourcc;
+    bool isRec;
+    bool threshExec;
+    bool aboutExec;
+    bool vidDlgExec;
 
     cv::VideoCapture cap;
     cv::VideoWriter rec;
@@ -95,58 +96,15 @@ private:
     QTimer timer;
     QImage qimg;
 
-    void paintEvent(QPaintEvent*)
-    {
-        //Display the frame, in this case a group of frames(a video)
-
-        QPainter painter(this);
-
-        painter.drawImage(QPoint(0,0),qimg);
-
-        painter.end();
-    }
+    void paintEvent(QPaintEvent*);
 
     void showFrame(const cv::Mat& frame);
 
     // The function counts the photos you took and places the photo number as the name
 
-    inline std::string intToString()
-    {
-        // It was used a stringstream to do the conversion int to string easily
+    std::string intToString();
 
-        std::stringstream print;
-
-        // Create a temporary string for not change the string where path is
-
-        std::string tmp = picPath;
-
-        print << pics; // converting a integer to a string
-
-        tmp +="/";
-        tmp += print.str();
-        tmp += ".jpg";
-
-        return tmp;
-    }
-
-    inline std::string intToStringRec()
-    {
-        // It was used a stringstream to do the conversion int to string easily
-
-        std::stringstream print;
-
-        // Create a temporary string for not change the string where path is
-
-        std::string tmp = picPath;
-
-        print << recs; // converting a integer to a string
-
-        tmp +="/";
-        tmp += print.str();
-        tmp += ext;
-
-        return tmp;
-    }
+    std::string intToStringRec();
 };
 
 #endif // MAINWINDOW_H

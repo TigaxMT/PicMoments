@@ -1,6 +1,6 @@
 /************************************************************************************************************
 *    											                                                            *
-*    PicYou - Is a simple program to take photos. Written on C++ and using Opencv library and QT Framework *
+*    PicMoments - Is a simple program to take photos. Written on C++ and using Opencv library and QT Framework *
 *											                                                                *
 *    Copyright (C) 2017  Tiago Martins                        				                                *
 *											                                                                *
@@ -38,7 +38,7 @@ Threshold::~Threshold()
     delete ui;
 }
 
-int Threshold::getSliderVal()
+double Threshold::getSliderVal()
 {
     return ui->threshSlider->value();
 }

@@ -1,6 +1,6 @@
 /************************************************************************************************************
 *    											                                                            *
-*    PicYou - Is a simple program to take photos. Written on C++ and using Opencv library and QT Framework *
+*    PicMoments - Is a simple program to take photos. Written on C++ and using Opencv library and QT Framework *
 *											                                                                *
 *    Copyright (C) 2017  Tiago Martins                        				                                *
 *											                                                                *
@@ -40,6 +40,10 @@ public:
 
     int getExtVal();
 
+    // Pass the value of ComboBox indexed to one of the codecs
+
+    int getCodecVal();
+
     // Verify if About dialog is running
 
 
@@ -47,6 +51,9 @@ public:
     {
         return dlgExec;
     }
+
+private slots:
+    void on_okBtn_clicked();
 
 private:
     Ui::VideoSettings *ui;

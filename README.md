@@ -1,5 +1,5 @@
-# PicYou
-PicYou is a simple program to take photos. Written on C++ and using Opencv library and QT Framework
+# PicMoments
+PicMoments is a simple program to take photos. Written on C++ and using Opencv library and QT Framework
 
 # OpenCV and QT Versions
 

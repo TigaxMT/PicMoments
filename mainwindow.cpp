@@ -1,6 +1,6 @@
 /************************************************************************************************************
 *    											                                                            *
-*    PicYou - Is a simple program to take photos. Written on C++ and using Opencv library and QT Framework *
+*    PicMoments - Is a simple program to take photos. Written on C++ and using Opencv library and QT Framework *
 *											                                                                *
 *    Copyright (C) 2017  Tiago Martins                        				                                *
 *											                                                                *
@@ -32,7 +32,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->menuBar->setStyleSheet("color: white");
     ui->stopRecBtn->setVisible(false);
 
+    // Init some vars
+
+    pics = 0; recs = 0; threshold = 0;
+    isRec = false; threshExec = false; aboutExec = false; vidDlgExec = false;
+
     rng(12345);
+
+    fourcc = CV_FOURCC('X','V','I','D');
 
     ext = ".avi";
 
@@ -127,12 +134,11 @@ void MainWindow::record()
         cv::Size S = cv::Size((int)cap.get(cv::CAP_PROP_FRAME_WIDTH),
                               (int)cap.get(cv::CAP_PROP_FRAME_HEIGHT));
 
-        // Use the MPEG-4.3 codec because he don't give problems on writing .avi file, like others codecs
 
         if(ui->actionCanny_Edges->isChecked())
-            rec.open(intToStringRec(),CV_FOURCC('D','I','V','3'),15,S,false);
+            rec.open(intToStringRec(),fourcc,15,S,false);
         else
-            rec.open(intToStringRec(),CV_FOURCC('D','I','V','3'),15,S,true);
+            rec.open(intToStringRec(),fourcc,15,S,true);
 
 
         if(!rec.isOpened())
@@ -164,6 +170,7 @@ void MainWindow::about()
        aboutDlg->show();
 
        aboutExec = true;
+
     }
 
     ui->actionAbout_PicYou->disconnect(ui->actionAbout_PicYou,&QAction::triggered,this,&MainWindow::about);
@@ -188,6 +195,15 @@ void MainWindow::videoSettings()
         case 1:
                 ext = ".mov";
                 break;
+    }
+
+    switch(vidDlg->getCodecVal())
+    {
+        case 0: fourcc = CV_FOURCC('X','V','I','D');break;
+        case 1: fourcc = CV_FOURCC('D','I','V','X');break;
+        case 2: fourcc = CV_FOURCC('D','I','V','3');break;
+        case 3: fourcc = CV_FOURCC('D','I','V','2');break;
+        case 4: fourcc = CV_FOURCC('M','J','P','G');break;
     }
 
     ui->actionVideo_Settings->disconnect(ui->actionVideo_Settings,&QAction::triggered,this,&MainWindow::videoSettings);
@@ -231,8 +247,11 @@ void MainWindow::on_timeout()
         aboutExec = false;
 
     if(vidDlg->dlgExecVal() == false)
-        vidDlgExec = false;
+    {
+        ui->actionVideo_Settings->setChecked(false);
 
+        vidDlgExec = false;
+    }
     // Signals and Slots
 
     connect(ui->picBtn,&QPushButton::clicked,this,&MainWindow::capture);
@@ -365,4 +384,53 @@ void MainWindow::showFrame(const cv::Mat &frame)
     this->setFixedSize(frame.cols,frame.rows);
 
     repaint();
+}
+
+void MainWindow::paintEvent(QPaintEvent *)
+{
+    //Display the frame, in this case a group of frames(a video)
+
+    QPainter painter(this);
+
+    painter.drawImage(QPoint(0,0),qimg);
+
+    painter.end();
+}
+
+std::string MainWindow::intToString()
+{
+    // It was used a stringstream to do the conversion int to string easily
+
+    std::stringstream print;
+
+    // Create a temporary string for not change the string where path is
+
+    std::string tmp = picPath;
+
+    print << pics; // converting a integer to a string
+
+    tmp +="/";
+    tmp += print.str();
+    tmp += ".jpg";
+
+    return tmp;
+}
+
+std::string MainWindow::intToStringRec()
+{
+    // It was used a stringstream to do the conversion int to string easily
+
+    std::stringstream print;
+
+    // Create a temporary string for not change the string where path is
+
+    std::string tmp = picPath;
+
+    print << recs; // converting a integer to a string
+
+    tmp +="/";
+    tmp += print.str();
+    tmp += ext;
+
+    return tmp;
 }
