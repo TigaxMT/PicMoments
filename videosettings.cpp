@@ -19,26 +19,34 @@
 *											                                                                *
 *************************************************************************************************************/
 
-#include "threshold.h"
-#include "ui_threshold.h"
+#include "videosettings.h"
+#include "ui_videosettings.h"
 
-Threshold::Threshold(QWidget *parent) :
+VideoSettings::VideoSettings(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::Threshold)
+    ui(new Ui::VideoSettings)
 {
     ui->setupUi(this);
 
-    ui->threshSlider->setRange(0,100);
+    dlgExec = true;
 
-    ui->threshSlider->setValue(50);
+    ui->extBox->addItem(".avi");
+    ui->extBox->addItem(".mov");
 }
 
-Threshold::~Threshold()
+VideoSettings::~VideoSettings()
 {
     delete ui;
 }
 
-int Threshold::getSliderVal()
+void VideoSettings::reject()
 {
-    return ui->threshSlider->value();
+    dlgExec = false;
+
+    QDialog::reject();
+}
+
+int VideoSettings::getExtVal()
+{
+    return ui->extBox->currentIndex();
 }

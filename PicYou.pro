@@ -30,17 +30,20 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     threshold.cpp \
-    about.cpp
+    about.cpp \
+    videosettings.cpp
 
 HEADERS += \
         mainwindow.h \
     threshold.h \
-    about.h
+    about.h \
+    videosettings.h
 
 FORMS += \
         mainwindow.ui \
     threshold.ui \
-    about.ui
+    about.ui \
+    videosettings.ui
 
 RESOURCES += \
     icons.qrc

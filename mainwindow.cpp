@@ -32,6 +32,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->menuBar->setStyleSheet("color: white");
     ui->stopRecBtn->setVisible(false);
 
+    rng(12345);
+
+    ext = ".avi";
+
     if(!cap.isOpened())
     {
         return;
@@ -81,24 +85,32 @@ void MainWindow::capture()
         ui->statusBar->showMessage("Pic Captured",500);
     }
     else
-    {
-        // Capture a frame to Mat Image
+        if(ui->actionColor_Contours->isChecked())
+        {
+            cv::imwrite(intToString(),flpPic,compression_params);
 
-        cap >> pic;
+            ui->statusBar->setStyleSheet("color: white");
+            ui->statusBar->showMessage("Pic Captured",500);
+        }
+        else
+        {
+            // Capture a frame to Mat Image
 
-        //Flip the frame
+            cap >> pic;
 
-        cv::flip(pic,flpPic,1);
+            //Flip the frame
 
-        // And save it in the path created on intToString function
+            cv::flip(pic,flpPic,1);
 
-        cv::imwrite(intToString(),flpPic,compression_params);
+            // And save it in the path created on intToString function
 
-        // Show a message in the statusbar for 1/2 sec
+            cv::imwrite(intToString(),flpPic,compression_params);
 
-        ui->statusBar->setStyleSheet("color: white");
-        ui->statusBar->showMessage("Pic Captured",500);
-    }
+            // Show a message in the statusbar for 1/2 sec
+
+            ui->statusBar->setStyleSheet("color: white");
+            ui->statusBar->showMessage("Pic Captured",500);
+        }
 
     pics++;
 }
@@ -115,12 +127,13 @@ void MainWindow::record()
         cv::Size S = cv::Size((int)cap.get(cv::CAP_PROP_FRAME_WIDTH),
                               (int)cap.get(cv::CAP_PROP_FRAME_HEIGHT));
 
-        int fourcc = static_cast<int> (cap.get(cv::CAP_PROP_FOURCC));
+        // Use the MPEG-4.3 codec because he don't give problems on writing .avi file, like others codecs
 
         if(ui->actionCanny_Edges->isChecked())
-            rec.open(intToStringRec(),fourcc,15,S,false);
+            rec.open(intToStringRec(),CV_FOURCC('D','I','V','3'),15,S,false);
         else
-            rec.open(intToStringRec(),fourcc,15,S,true);
+            rec.open(intToStringRec(),CV_FOURCC('D','I','V','3'),15,S,true);
+
 
         if(!rec.isOpened())
             return;
@@ -156,6 +169,30 @@ void MainWindow::about()
     ui->actionAbout_PicYou->disconnect(ui->actionAbout_PicYou,&QAction::triggered,this,&MainWindow::about);
 }
 
+void MainWindow::videoSettings()
+{
+    if(!vidDlgExec)
+    {
+       vidDlg = new VideoSettings(this);
+
+       vidDlg->show();
+
+       vidDlgExec = true;
+    }
+
+    switch(vidDlg->getExtVal())
+    {
+        case 0:
+                ext = ".avi";
+                break;
+        case 1:
+                ext = ".mov";
+                break;
+    }
+
+    ui->actionVideo_Settings->disconnect(ui->actionVideo_Settings,&QAction::triggered,this,&MainWindow::videoSettings);
+}
+
 void MainWindow::on_timeout()
 {
     // Start capture frames
@@ -167,31 +204,44 @@ void MainWindow::on_timeout()
     if(ui->actionCanny_Edges->isChecked())
         cannyEdge();
     else
-    {
-        if(threshExec)
+        if(ui->actionColor_Contours->isChecked())
+            colorContours();
+        else
         {
-            threshCtrl->close();
+            if(threshExec)
+            {
+                threshCtrl->close();
 
-            threshExec = false;
+                threshExec = false;
 
-            ui->menuBar->setStyleSheet("color: white");
+                ui->menuBar->setStyleSheet("color: white");
+            }
+
+            noEffects();
         }
-
-        noEffects();
-    }
-    // If the pushButton has been pressed a signal is emitted and initializes your private slot capture()
 
     if(isRec)
         record();
 
+    if(ui->actionVideo_Settings->isChecked())
+        if(vidDlg->dlgExecVal() == true)
+            videoSettings();
+
     if(aboutDlg->dlgExecVal() == false)
         aboutExec = false;
+
+    if(vidDlg->dlgExecVal() == false)
+        vidDlgExec = false;
+
+    // Signals and Slots
 
     connect(ui->picBtn,&QPushButton::clicked,this,&MainWindow::capture);
     connect(ui->recBtn,&QPushButton::clicked,this,&MainWindow::record);
     connect(ui->stopRecBtn,&QPushButton::clicked,this,&MainWindow::stopRecord);
     connect(ui->actionCanny_Edges,&QAction::triggered,this,&MainWindow::cannyEdge);
+    connect(ui->actionColor_Contours,&QAction::triggered,this,&MainWindow::colorContours);
     connect(ui->actionAbout_PicYou,&QAction::triggered,this,&MainWindow::about);
+    connect(ui->actionVideo_Settings,&QAction::triggered,this,&MainWindow::videoSettings);
 }
 
 void MainWindow::noEffects()
@@ -236,6 +286,57 @@ void MainWindow::cannyEdge()
     cv::blur(pic_gray,flpPic,cv::Size(3,3));
 
     cv::Canny(flpPic,flpPic,threshold,threshold*3,3);
+
+    showFrame(flpPic);
+}
+
+void MainWindow::colorContours()
+{
+    if(!threshExec)
+    {
+        threshCtrl = new Threshold(this);
+
+        threshCtrl->setWindowTitle("Adjust Threshold");
+
+        threshCtrl->show();
+
+        threshExec = true;
+    }
+
+    threshold = threshCtrl->getSliderVal();
+
+    ui->menuBar->setStyleSheet("color: white");
+    ui->actionColor_Contours->disconnect(ui->actionColor_Contours,&QAction::triggered,this,&MainWindow::colorContours);
+
+    cv::Mat pic_gray,canny;
+
+    std::vector<std::vector<cv::Point>> contours;
+    std::vector<cv::Vec4i> hierarchy;
+
+    cv::flip(pic,flpPic,1);
+
+    cv::cvtColor(flpPic,pic_gray,cv::COLOR_BGR2GRAY);
+
+    flpPic.release();
+
+    cv::blur(pic_gray,pic_gray,cv::Size(3,3));
+
+    cv::Canny(pic_gray,canny,threshold,threshold*2,3);
+
+    pic_gray.release();
+
+    cv::findContours(canny,contours,hierarchy,cv::RETR_TREE,cv::CHAIN_APPROX_SIMPLE,cv::Point(0,0));
+
+    flpPic = cv::Mat::zeros(canny.size(),CV_8UC3);
+
+    canny.release();
+
+    for(size_t i = 0;i < contours.size();i++)
+    {
+        cv::Scalar color = cv::Scalar(rng.uniform(0,255),rng.uniform(0,255),rng.uniform(0,255));
+
+        cv::drawContours(flpPic,contours,(int)i,color,2,8,hierarchy,0,cv::Point());
+    }
 
     showFrame(flpPic);
 }

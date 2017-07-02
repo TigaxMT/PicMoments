@@ -40,6 +40,7 @@
 
 #include "threshold.h"
 #include "about.h"
+#include "videosettings.h"
 
 namespace Ui {
 class MainWindow;
@@ -57,30 +58,37 @@ private slots:
     void capture();
     void record();
     void stopRecord();
-    void about();
     void on_timeout();
+
+    void about();
+    void videoSettings();
 
     void noEffects();
     void cannyEdge();
+    void colorContours();
 
 private:
     Ui::MainWindow *ui;
     Threshold *threshCtrl;
     About *aboutDlg;
+    VideoSettings *vidDlg;
 
     std::string picPath;
+    std::string ext;
     int pics = 0; // Count the photos you took
     int recs = 0; // Count the videos you record
     int threshold = 0;
     bool isRec = false;
     bool threshExec = false;
     bool aboutExec = false;
+    bool vidDlgExec = false;
 
     cv::VideoCapture cap;
     cv::VideoWriter rec;
     cv::Mat pic;
     cv::Mat tmpMat;
     cv::Mat flpPic;
+    cv::RNG rng;
 
     std::vector<int> compression_params;
 
@@ -135,7 +143,7 @@ private:
 
         tmp +="/";
         tmp += print.str();
-        tmp += ".mp4";
+        tmp += ext;
 
         return tmp;
     }

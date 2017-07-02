@@ -563,11 +563,13 @@
      <string>Effects</string>
     </property>
     <addaction name="actionCanny_Edges"/>
+    <addaction name="actionColor_Contours"/>
    </widget>
    <widget class="QMenu" name="menuOptions">
     <property name="title">
      <string>Options</string>
     </property>
+    <addaction name="actionVideo_Settings"/>
     <addaction name="actionAbout_PicYou"/>
    </widget>
    <addaction name="menuEffects"/>
@@ -590,6 +592,22 @@
   <action name="actionAbout_PicYou">
    <property name="text">
     <string>About PicYou...</string>
+   </property>
+  </action>
+  <action name="actionColor_Contours">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Color Contours</string>
+   </property>
+  </action>
+  <action name="actionVideo_Settings">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Video Settings</string>
    </property>
   </action>
  </widget>

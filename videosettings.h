@@ -19,26 +19,43 @@
 *											                                                                *
 *************************************************************************************************************/
 
-#include "threshold.h"
-#include "ui_threshold.h"
+#ifndef VIDEOSETTINGS_H
+#define VIDEOSETTINGS_H
 
-Threshold::Threshold(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::Threshold)
-{
-    ui->setupUi(this);
+#include <QDialog>
 
-    ui->threshSlider->setRange(0,100);
-
-    ui->threshSlider->setValue(50);
+namespace Ui {
+class VideoSettings;
 }
 
-Threshold::~Threshold()
+class VideoSettings : public QDialog
 {
-    delete ui;
-}
+    Q_OBJECT
 
-int Threshold::getSliderVal()
-{
-    return ui->threshSlider->value();
-}
+public:
+    explicit VideoSettings(QWidget *parent = 0);
+    ~VideoSettings();
+
+    // Pass the value of ComboBox indexed to one of the extensions
+
+    int getExtVal();
+
+    // Verify if About dialog is running
+
+
+    bool dlgExecVal()
+    {
+        return dlgExec;
+    }
+
+private:
+    Ui::VideoSettings *ui;
+
+    bool dlgExec = false;
+
+    // Override the reject function of QDialog, to change dlgExec value
+
+    void reject();
+};
+
+#endif // VIDEOSETTINGS_H

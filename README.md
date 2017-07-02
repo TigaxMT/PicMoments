@@ -1,5 +1,5 @@
 # PicYou
-PicYou is a simple program to take photos/record videos and in future, edit this photos/videos. Written on C++ and using Opencv library and QT Framework
+PicYou is a simple program to take photos. Written on C++ and using Opencv library and QT Framework
 
 # OpenCV and QT Versions
 
