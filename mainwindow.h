@@ -54,6 +54,8 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    //onst int h,w; // Set fixed Size for mainwindow with minimum resolution of the webcam
+
 private slots:
     void capture();
     void record();
@@ -79,6 +81,11 @@ private:
     int pics; // Count the photos you took
     int recs; // Count the videos you record
     int fourcc;
+    int extIndexVal; // Save the index of the extension value on the comboBox(VideoSettings)
+    int codecIndexVal;// Save the index of the codec value on the comboBox(VideoSettings)
+    int current_h,current_w; // current height and width resolution
+    int highest_h,highest_w; // Highest height and width resolution
+    int resolutionVal; // Save the index of resolution value on the comboBox(VideoSettings)
     bool isRec;
     bool threshExec;
     bool aboutExec;
@@ -95,6 +102,8 @@ private:
 
     QTimer timer;
     QImage qimg;
+
+    void maximumResolution();
 
     void paintEvent(QPaintEvent*);
 

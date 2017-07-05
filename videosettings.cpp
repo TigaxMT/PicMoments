@@ -52,6 +52,41 @@ void VideoSettings::reject()
     QDialog::reject();
 }
 
+void VideoSettings::setAllResolutions(int cw, int ch, int hw, int hh)
+{
+    cur_w = cw;
+    cur_h = ch;
+
+    h_w = hw;
+    h_h = hh;
+
+    QString min_res = (QString::number(cw) + " X " + QString::number(ch));
+    QString max_res = (QString::number(hw) + " X " + QString::number(hh));
+
+    ui->resolutionBox->addItem(min_res);
+    ui->resolutionBox->addItem(max_res);
+}
+
+void VideoSettings::setResolutionVal(int val)
+{
+    ui->resolutionBox->setCurrentIndex(val);
+}
+
+void VideoSettings::setExtVal(int val)
+{
+    ui->extBox->setCurrentIndex(val);
+}
+
+void VideoSettings::setCodecVal(int val)
+{
+    ui->codecsBox->setCurrentIndex(val);
+}
+
+int VideoSettings::getResolutionVal()
+{
+    return ui->resolutionBox->currentIndex();
+}
+
 int VideoSettings::getCodecVal()
 {
     return ui->codecsBox->currentIndex();
@@ -62,7 +97,19 @@ int VideoSettings::getExtVal()
     return ui->extBox->currentIndex();
 }
 
+bool VideoSettings::dlgExecVal()
+{
+    return dlgExec;
+}
+
 void VideoSettings::on_okBtn_clicked()
 {
     this->close();
+}
+
+void VideoSettings::on_resolutionBox_currentIndexChanged(int index)
+{
+    Q_UNUSED(index);
+
+    resolution_changed = true;
 }

@@ -38,6 +38,11 @@ About::~About()
     delete ui;
 }
 
+bool About::dlgExecVal()
+{
+    return dlgExec;
+}
+
 void About::reject()
 {
     dlgExec = false;

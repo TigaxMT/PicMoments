@@ -38,10 +38,7 @@ public:
 
     // Verify if About dialog is running
 
-    bool dlgExecVal()
-    {
-        return dlgExec;
-    }
+    bool dlgExecVal();
 
 private slots:
     void on_closeBtn_clicked();

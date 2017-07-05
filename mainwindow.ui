@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="icons.qrc">
+    <normaloff>:/icons/icons/Icon.png</normaloff>:/icons/icons/Icon.png</iconset>
+  </property>
   <property name="styleSheet">
    <string notr="true">border: 0px;</string>
   </property>
@@ -570,7 +574,7 @@
      <string>Options</string>
     </property>
     <addaction name="actionVideo_Settings"/>
-    <addaction name="actionAbout_PicYou"/>
+    <addaction name="actionAbout_PicMoments"/>
    </widget>
    <addaction name="menuEffects"/>
    <addaction name="menuOptions"/>
@@ -589,7 +593,10 @@
     <string>Canny Edges</string>
    </property>
   </action>
-  <action name="actionAbout_PicYou">
+  <action name="actionAbout_PicMoments">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>About PicYou...</string>
    </property>

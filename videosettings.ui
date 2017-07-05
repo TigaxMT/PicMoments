@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>274</width>
+    <width>420</width>
     <height>196</height>
    </rect>
   </property>
@@ -16,8 +16,8 @@
   <widget class="QPushButton" name="okBtn">
    <property name="geometry">
     <rect>
-     <x>180</x>
-     <y>150</y>
+     <x>320</x>
+     <y>160</y>
      <width>80</width>
      <height>25</height>
     </rect>
@@ -26,13 +26,13 @@
     <string>OK</string>
    </property>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>20</x>
      <y>20</y>
      <width>171</width>
-     <height>108</height>
+     <height>164</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -63,6 +63,28 @@
        <widget class="QComboBox" name="extBox"/>
       </item>
      </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="">
+   <property name="geometry">
+    <rect>
+     <x>220</x>
+     <y>20</y>
+     <width>171</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout_4">
+    <item>
+     <widget class="QLabel" name="resolution">
+      <property name="text">
+       <string>&lt;b&gt;Resolution&lt;/b&gt;</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QComboBox" name="resolutionBox"/>
     </item>
    </layout>
   </widget>

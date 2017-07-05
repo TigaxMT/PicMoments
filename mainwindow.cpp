@@ -32,9 +32,17 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->menuBar->setStyleSheet("color: white");
     ui->stopRecBtn->setVisible(false);
 
+    maximumResolution();
+
+    cap.set(CV_CAP_PROP_FRAME_WIDTH, current_w);
+    cap.set(CV_CAP_PROP_FRAME_HEIGHT, current_h);
+
+   // w = current_w;
+   // h = current_h;
+
     // Init some vars
 
-    pics = 0; recs = 0; threshold = 0;
+    pics = 0; recs = 0; threshold = 0; extIndexVal = 0; codecIndexVal = 0, resolutionVal = 0;
     isRec = false; threshExec = false; aboutExec = false; vidDlgExec = false;
 
     rng(12345);
@@ -136,9 +144,9 @@ void MainWindow::record()
 
 
         if(ui->actionCanny_Edges->isChecked())
-            rec.open(intToStringRec(),fourcc,15,S,false);
+            rec.open(intToStringRec(),fourcc,10,S,false);
         else
-            rec.open(intToStringRec(),fourcc,15,S,true);
+            rec.open(intToStringRec(),fourcc,10,S,true);
 
 
         if(!rec.isOpened())
@@ -173,7 +181,7 @@ void MainWindow::about()
 
     }
 
-    ui->actionAbout_PicYou->disconnect(ui->actionAbout_PicYou,&QAction::triggered,this,&MainWindow::about);
+    ui->actionAbout_PicMoments->disconnect(ui->actionAbout_PicMoments,&QAction::triggered,this,&MainWindow::about);
 }
 
 void MainWindow::videoSettings()
@@ -184,26 +192,48 @@ void MainWindow::videoSettings()
 
        vidDlg->show();
 
+       vidDlg->setExtVal(extIndexVal);
+       vidDlg->setCodecVal(codecIndexVal);
+       vidDlg->setAllResolutions(current_w,current_h,highest_w,highest_h);
+       vidDlg->setResolutionVal(resolutionVal);
+
        vidDlgExec = true;
     }
 
+    // Only update webcam resolution when resolution comboBox index had changed
+    // To prevent some lag
+
+    if(vidDlg->resolution_changed)
+        switch(vidDlg->getResolutionVal())
+        {
+            case 0: cap.set(CV_CAP_PROP_FRAME_WIDTH, current_w);
+                    cap.set(CV_CAP_PROP_FRAME_HEIGHT, current_h);
+                    resolutionVal = 0;vidDlg->resolution_changed = false;
+                        break;
+
+           case 1: cap.set(CV_CAP_PROP_FRAME_WIDTH,highest_w);
+                   cap.set(CV_CAP_PROP_FRAME_HEIGHT,highest_h);
+                   resolutionVal = 1;vidDlg->resolution_changed = false;
+                        break;
+        }
+
     switch(vidDlg->getExtVal())
     {
-        case 0:
+        case 0: extIndexVal = 0;
                 ext = ".avi";
                 break;
-        case 1:
+        case 1: extIndexVal = 1;
                 ext = ".mov";
                 break;
     }
 
     switch(vidDlg->getCodecVal())
     {
-        case 0: fourcc = CV_FOURCC('X','V','I','D');break;
-        case 1: fourcc = CV_FOURCC('D','I','V','X');break;
-        case 2: fourcc = CV_FOURCC('D','I','V','3');break;
-        case 3: fourcc = CV_FOURCC('D','I','V','2');break;
-        case 4: fourcc = CV_FOURCC('M','J','P','G');break;
+        case 0: fourcc = CV_FOURCC('X','V','I','D');codecIndexVal = 0;break;
+        case 1: fourcc = CV_FOURCC('D','I','V','X');codecIndexVal = 1;break;
+        case 2: fourcc = CV_FOURCC('D','I','V','3');codecIndexVal = 2;break;
+        case 3: fourcc = CV_FOURCC('D','I','V','2');codecIndexVal = 3;break;
+        case 4: fourcc = CV_FOURCC('M','J','P','G');codecIndexVal = 4;break;
     }
 
     ui->actionVideo_Settings->disconnect(ui->actionVideo_Settings,&QAction::triggered,this,&MainWindow::videoSettings);
@@ -240,18 +270,26 @@ void MainWindow::on_timeout()
         record();
 
     if(ui->actionVideo_Settings->isChecked())
-        if(vidDlg->dlgExecVal() == true)
-            videoSettings();
-
-    if(aboutDlg->dlgExecVal() == false)
-        aboutExec = false;
-
-    if(vidDlg->dlgExecVal() == false)
     {
-        ui->actionVideo_Settings->setChecked(false);
-
-        vidDlgExec = false;
+        if(vidDlg->dlgExecVal() == true)
+              videoSettings();
+        else
+        {
+            ui->actionVideo_Settings->setChecked(false);
+            vidDlgExec = false;
+        }
     }
+
+    if(ui->actionAbout_PicMoments->isChecked())
+    {
+        if(aboutDlg->dlgExecVal() == false)
+        {
+            ui->actionAbout_PicMoments->setChecked(false);
+
+            aboutExec = false;
+        }
+    }
+
     // Signals and Slots
 
     connect(ui->picBtn,&QPushButton::clicked,this,&MainWindow::capture);
@@ -259,7 +297,7 @@ void MainWindow::on_timeout()
     connect(ui->stopRecBtn,&QPushButton::clicked,this,&MainWindow::stopRecord);
     connect(ui->actionCanny_Edges,&QAction::triggered,this,&MainWindow::cannyEdge);
     connect(ui->actionColor_Contours,&QAction::triggered,this,&MainWindow::colorContours);
-    connect(ui->actionAbout_PicYou,&QAction::triggered,this,&MainWindow::about);
+    connect(ui->actionAbout_PicMoments,&QAction::triggered,this,&MainWindow::about);
     connect(ui->actionVideo_Settings,&QAction::triggered,this,&MainWindow::videoSettings);
 }
 
@@ -360,6 +398,22 @@ void MainWindow::colorContours()
     showFrame(flpPic);
 }
 
+void MainWindow::maximumResolution()
+{
+    //Save current height and width
+
+    current_w = static_cast<int>(cap.get(CV_CAP_PROP_FRAME_WIDTH));
+    current_h = static_cast<int>(cap.get(CV_CAP_PROP_FRAME_HEIGHT));
+
+    // Get maximum resolution
+
+    cap.set(CV_CAP_PROP_FRAME_WIDTH,10000);
+    cap.set(CV_CAP_PROP_FRAME_HEIGHT,10000);
+
+    highest_w = static_cast<int>(cap.get(CV_CAP_PROP_FRAME_WIDTH));
+    highest_h = static_cast<int>(cap.get(CV_CAP_PROP_FRAME_HEIGHT));
+}
+
 void MainWindow::showFrame(const cv::Mat &frame)
 {
     //Convert the image to the to RGB888 format, a format Qt supports
@@ -379,9 +433,13 @@ void MainWindow::showFrame(const cv::Mat &frame)
 
     qimg = QImage(tmpMat.data,tmpMat.cols,tmpMat.rows,tmpMat.cols*3,QImage::Format_RGB888);
 
+    // Resize the QImage for keep the mainwindow small (because the minimum resolution of the webcam is used for the fixed size window)
+    if(resolutionVal == 1)
+        qimg = qimg.scaled(current_w,current_h,Qt::KeepAspectRatio);
+
     // Set fix the size of the video stream
 
-    this->setFixedSize(frame.cols,frame.rows);
+    this->setFixedSize(current_w,current_h);
 
     repaint();
 }

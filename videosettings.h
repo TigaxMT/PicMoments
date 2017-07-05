@@ -44,21 +44,31 @@ public:
 
     int getCodecVal();
 
+    int getResolutionVal();
+
+    void setExtVal(int val);
+    void setCodecVal(int val);
+    void setResolutionVal(int val);
+    // Function to convert resolution integers to string and put the strings on the comboBox
+    void setAllResolutions(int cw,int ch,int hw,int hh);
+
     // Verify if About dialog is running
 
+    bool dlgExecVal();
 
-    bool dlgExecVal()
-    {
-        return dlgExec;
-    }
+    bool resolution_changed = false;
 
 private slots:
     void on_okBtn_clicked();
+
+    void on_resolutionBox_currentIndexChanged(int index);
 
 private:
     Ui::VideoSettings *ui;
 
     bool dlgExec = false;
+    int cur_h, cur_w; // current height and width resolution
+    int h_h,h_w; // Highest height and width resolution
 
     // Override the reject function of QDialog, to change dlgExec value
 
