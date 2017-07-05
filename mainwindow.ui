@@ -566,8 +566,9 @@
     <property name="title">
      <string>Effects</string>
     </property>
-    <addaction name="actionCanny_Edges"/>
     <addaction name="actionColor_Contours"/>
+    <addaction name="actionSobel"/>
+    <addaction name="actionCanny_Edges"/>
    </widget>
    <widget class="QMenu" name="menuOptions">
     <property name="title">
@@ -615,6 +616,14 @@
    </property>
    <property name="text">
     <string>Video Settings</string>
+   </property>
+  </action>
+  <action name="actionSobel">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Laplace</string>
    </property>
   </action>
  </widget>

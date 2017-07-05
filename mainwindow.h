@@ -68,6 +68,7 @@ private slots:
     void noEffects();
     void cannyEdge();
     void colorContours();
+    void sobel();
 
 private:
     Ui::MainWindow *ui;

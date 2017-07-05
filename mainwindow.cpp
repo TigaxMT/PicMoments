@@ -92,7 +92,7 @@ void MainWindow::capture()
 
     ui->picBtn->disconnect(ui->picBtn,&QPushButton::clicked,this,&MainWindow::capture);
 
-    if(ui->actionCanny_Edges->isChecked())
+    if(ui->actionCanny_Edges->isChecked() || ui->actionSobel->isChecked())
     {
         cv::imwrite(intToString(),flpPic,compression_params);
 
@@ -143,7 +143,7 @@ void MainWindow::record()
                               (int)cap.get(cv::CAP_PROP_FRAME_HEIGHT));
 
 
-        if(ui->actionCanny_Edges->isChecked())
+        if(ui->actionCanny_Edges->isChecked() || ui->actionSobel->isChecked())
             rec.open(intToStringRec(),fourcc,10,S,false);
         else
             rec.open(intToStringRec(),fourcc,10,S,true);
@@ -253,18 +253,21 @@ void MainWindow::on_timeout()
         if(ui->actionColor_Contours->isChecked())
             colorContours();
         else
-        {
-            if(threshExec)
+            if(ui->actionSobel->isChecked())
+                sobel();
+            else
             {
-                threshCtrl->close();
+                if(threshExec)
+                {
+                    threshCtrl->close();
 
-                threshExec = false;
+                    threshExec = false;
 
-                ui->menuBar->setStyleSheet("color: white");
+                    ui->menuBar->setStyleSheet("color: white");
+                }
+
+                noEffects();
             }
-
-            noEffects();
-        }
 
     if(isRec)
         record();
@@ -297,6 +300,7 @@ void MainWindow::on_timeout()
     connect(ui->stopRecBtn,&QPushButton::clicked,this,&MainWindow::stopRecord);
     connect(ui->actionCanny_Edges,&QAction::triggered,this,&MainWindow::cannyEdge);
     connect(ui->actionColor_Contours,&QAction::triggered,this,&MainWindow::colorContours);
+    connect(ui->actionSobel,&QAction::triggered,this,&MainWindow::sobel);
     connect(ui->actionAbout_PicMoments,&QAction::triggered,this,&MainWindow::about);
     connect(ui->actionVideo_Settings,&QAction::triggered,this,&MainWindow::videoSettings);
 }
@@ -398,6 +402,32 @@ void MainWindow::colorContours()
     showFrame(flpPic);
 }
 
+void MainWindow::sobel()
+{
+    ui->menuBar->setStyleSheet("color: white");
+    ui->actionSobel->disconnect(ui->actionSobel,&QAction::triggered,this,&MainWindow::sobel);
+
+    cv::Mat pic_gray, grad_x, grad_y,abs_grad_x, abs_grad_y;;
+
+    cv::flip(pic,flpPic,1);
+
+    cv::GaussianBlur(flpPic,flpPic,cv::Size(3,3),0,0,cv::BORDER_DEFAULT);
+
+    cv::cvtColor(flpPic,pic_gray,cv::COLOR_BGR2GRAY);
+
+    flpPic.release();
+
+    cv::Sobel(pic_gray,grad_x,CV_16S,1,0,3,1,0,cv::BORDER_DEFAULT);
+    cv::Sobel(pic_gray,grad_y,CV_16S,0,1,3,1,0,cv::BORDER_DEFAULT);
+
+    cv::convertScaleAbs(grad_x,abs_grad_x);
+    cv::convertScaleAbs(grad_y,abs_grad_y);
+
+    cv::addWeighted(abs_grad_x,0.5,abs_grad_y,0.5,0,flpPic);
+
+    showFrame(flpPic);
+}
+
 void MainWindow::maximumResolution()
 {
     //Save current height and width
@@ -420,6 +450,8 @@ void MainWindow::showFrame(const cv::Mat &frame)
 
     switch(frame.type())
     {
+        //case CV_8UC:  cv::cvtColor(frame,tmpMat,CV_GRAY2RGB); break;
+
         case CV_8UC1: cv::cvtColor(frame,tmpMat,CV_GRAY2RGB); break;
 
         case CV_8UC3: cv::cvtColor(frame,tmpMat,CV_BGR2RGB); break;
@@ -435,8 +467,11 @@ void MainWindow::showFrame(const cv::Mat &frame)
 
     // Resize the QImage for keep the mainwindow small (because the minimum resolution of the webcam is used for the fixed size window)
     if(resolutionVal == 1)
-        qimg = qimg.scaled(current_w,current_h,Qt::KeepAspectRatio);
+    {
+        QImage scaled = qimg.scaled(current_w,current_h,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
 
+        qimg = scaled;
+    }
     // Set fix the size of the video stream
 
     this->setFixedSize(current_w,current_h);
