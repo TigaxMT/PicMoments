@@ -32,13 +32,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->menuBar->setStyleSheet("color: white");
     ui->stopRecBtn->setVisible(false);
 
+    // set the maximum resolution of webcam supports
+
     maximumResolution();
 
     cap.set(CV_CAP_PROP_FRAME_WIDTH, current_w);
     cap.set(CV_CAP_PROP_FRAME_HEIGHT, current_h);
 
-   // w = current_w;
-   // h = current_h;
+    ui->actionNo_Effects->setChecked(true);
 
     // Init some vars
 
@@ -94,7 +95,7 @@ void MainWindow::capture()
 
     if(ui->actionCanny_Edges->isChecked() || ui->actionSobel->isChecked())
     {
-        cv::imwrite(intToString(),flpPic,compression_params);
+        cv::imwrite(intToString(),fxPic,compression_params);
 
         ui->statusBar->setStyleSheet("color: red");
         ui->statusBar->showMessage("Pic Captured",500);
@@ -102,7 +103,7 @@ void MainWindow::capture()
     else
         if(ui->actionColor_Contours->isChecked())
         {
-            cv::imwrite(intToString(),flpPic,compression_params);
+            cv::imwrite(intToString(),fxPic,compression_params);
 
             ui->statusBar->setStyleSheet("color: white");
             ui->statusBar->showMessage("Pic Captured",500);
@@ -115,11 +116,11 @@ void MainWindow::capture()
 
             //Flip the frame
 
-            cv::flip(pic,flpPic,1);
+            cv::flip(pic,fxPic,1);
 
             // And save it in the path created on intToString function
 
-            cv::imwrite(intToString(),flpPic,compression_params);
+            cv::imwrite(intToString(),fxPic,compression_params);
 
             // Show a message in the statusbar for 1/2 sec
 
@@ -155,7 +156,7 @@ void MainWindow::record()
         isRec=true;
     }
 
-    rec.write(flpPic);
+    rec.write(fxPic);
 }
 
 void MainWindow::stopRecord()
@@ -257,15 +258,6 @@ void MainWindow::on_timeout()
                 sobel();
             else
             {
-                if(threshExec)
-                {
-                    threshCtrl->close();
-
-                    threshExec = false;
-
-                    ui->menuBar->setStyleSheet("color: white");
-                }
-
                 noEffects();
             }
 
@@ -298,6 +290,7 @@ void MainWindow::on_timeout()
     connect(ui->picBtn,&QPushButton::clicked,this,&MainWindow::capture);
     connect(ui->recBtn,&QPushButton::clicked,this,&MainWindow::record);
     connect(ui->stopRecBtn,&QPushButton::clicked,this,&MainWindow::stopRecord);
+    connect(ui->actionNo_Effects,&QAction::triggered,this,&MainWindow::noEffects);
     connect(ui->actionCanny_Edges,&QAction::triggered,this,&MainWindow::cannyEdge);
     connect(ui->actionColor_Contours,&QAction::triggered,this,&MainWindow::colorContours);
     connect(ui->actionSobel,&QAction::triggered,this,&MainWindow::sobel);
@@ -307,15 +300,40 @@ void MainWindow::on_timeout()
 
 void MainWindow::noEffects()
 {
+    // noEffects() doesn't need threshold dialog, so if he are running we stop him
+
+    if(threshExec)
+    {
+        threshCtrl->close();
+
+        delete threshCtrl;
+
+        threshExec = false;
+
+        ui->menuBar->setStyleSheet("color: white");
+    }
+
+    ui->actionColor_Contours->setChecked(false);
+    ui->actionSobel->setChecked(false);
+    ui->actionCanny_Edges->setChecked(false);
+    ui->actionNo_Effects->setChecked(true);
+
+    ui->actionNo_Effects->disconnect(ui->actionNo_Effects,&QAction::triggered,this,&MainWindow::noEffects);
+
     // Flip the frame
 
-    cv::flip(pic,flpPic,1);
+    cv::flip(pic,fxPic,1);
 
-    showFrame(flpPic);
+    showFrame(fxPic);
 }
 
 void MainWindow::cannyEdge()
 {
+    ui->actionColor_Contours->setChecked(false);
+    ui->actionSobel->setChecked(false);
+    ui->actionCanny_Edges->setChecked(true);
+    ui->actionNo_Effects->setChecked(false);
+
     // Create and show QDialog to adjust the threshold value
 
     if(!threshExec)
@@ -338,21 +356,26 @@ void MainWindow::cannyEdge()
 
     cv::Mat pic_gray;
 
-    cv::flip(pic,flpPic,1);
+    cv::flip(pic,fxPic,1);
 
-    cv::cvtColor(flpPic,pic_gray,cv::COLOR_BGR2GRAY);
+    cv::cvtColor(fxPic,pic_gray,cv::COLOR_BGR2GRAY);
 
-    flpPic.release();
+    fxPic.release();
 
-    cv::blur(pic_gray,flpPic,cv::Size(3,3));
+    cv::blur(pic_gray,fxPic,cv::Size(3,3));
 
-    cv::Canny(flpPic,flpPic,threshold,threshold*3,3);
+    cv::Canny(fxPic,fxPic,threshold,threshold*3,3);
 
-    showFrame(flpPic);
+    showFrame(fxPic);
 }
 
 void MainWindow::colorContours()
 {
+    ui->actionColor_Contours->setChecked(true);
+    ui->actionSobel->setChecked(false);
+    ui->actionCanny_Edges->setChecked(false);
+    ui->actionNo_Effects->setChecked(false);
+
     if(!threshExec)
     {
         threshCtrl = new Threshold(this);
@@ -374,11 +397,11 @@ void MainWindow::colorContours()
     std::vector<std::vector<cv::Point>> contours;
     std::vector<cv::Vec4i> hierarchy;
 
-    cv::flip(pic,flpPic,1);
+    cv::flip(pic,fxPic,1);
 
-    cv::cvtColor(flpPic,pic_gray,cv::COLOR_BGR2GRAY);
+    cv::cvtColor(fxPic,pic_gray,cv::COLOR_BGR2GRAY);
 
-    flpPic.release();
+    fxPic.release();
 
     cv::blur(pic_gray,pic_gray,cv::Size(3,3));
 
@@ -388,7 +411,7 @@ void MainWindow::colorContours()
 
     cv::findContours(canny,contours,hierarchy,cv::RETR_TREE,cv::CHAIN_APPROX_SIMPLE,cv::Point(0,0));
 
-    flpPic = cv::Mat::zeros(canny.size(),CV_8UC3);
+    fxPic = cv::Mat::zeros(canny.size(),CV_8UC3);
 
     canny.release();
 
@@ -396,26 +419,44 @@ void MainWindow::colorContours()
     {
         cv::Scalar color = cv::Scalar(rng.uniform(0,255),rng.uniform(0,255),rng.uniform(0,255));
 
-        cv::drawContours(flpPic,contours,(int)i,color,2,8,hierarchy,0,cv::Point());
+        cv::drawContours(fxPic,contours,(int)i,color,2,8,hierarchy,0,cv::Point());
     }
 
-    showFrame(flpPic);
+    showFrame(fxPic);
 }
 
 void MainWindow::sobel()
 {
+    // sobel() doesn't need threshold dialog, so if he are running we stop him
+
+    if(threshExec)
+    {
+        threshCtrl->close();
+
+        delete threshCtrl;
+
+        threshExec = false;
+
+        ui->menuBar->setStyleSheet("color: white");
+    }
+
+    ui->actionColor_Contours->setChecked(false);
+    ui->actionSobel->setChecked(true);
+    ui->actionCanny_Edges->setChecked(false);
+    ui->actionNo_Effects->setChecked(false);
+
     ui->menuBar->setStyleSheet("color: white");
     ui->actionSobel->disconnect(ui->actionSobel,&QAction::triggered,this,&MainWindow::sobel);
 
-    cv::Mat pic_gray, grad_x, grad_y,abs_grad_x, abs_grad_y;;
+    cv::Mat pic_gray,grad_x, grad_y,abs_grad_x, abs_grad_y;
 
-    cv::flip(pic,flpPic,1);
+    cv::flip(pic,fxPic,1);
 
-    cv::GaussianBlur(flpPic,flpPic,cv::Size(3,3),0,0,cv::BORDER_DEFAULT);
+    cv::GaussianBlur(fxPic,fxPic,cv::Size(3,3),0,0,cv::BORDER_DEFAULT);
 
-    cv::cvtColor(flpPic,pic_gray,cv::COLOR_BGR2GRAY);
+    cv::cvtColor(fxPic,pic_gray,cv::COLOR_BGR2GRAY);
 
-    flpPic.release();
+    fxPic.release();
 
     cv::Sobel(pic_gray,grad_x,CV_16S,1,0,3,1,0,cv::BORDER_DEFAULT);
     cv::Sobel(pic_gray,grad_y,CV_16S,0,1,3,1,0,cv::BORDER_DEFAULT);
@@ -423,9 +464,9 @@ void MainWindow::sobel()
     cv::convertScaleAbs(grad_x,abs_grad_x);
     cv::convertScaleAbs(grad_y,abs_grad_y);
 
-    cv::addWeighted(abs_grad_x,0.5,abs_grad_y,0.5,0,flpPic);
+    cv::addWeighted(abs_grad_x,0.5,abs_grad_y,0.5,0,fxPic);
 
-    showFrame(flpPic);
+    showFrame(fxPic);
 }
 
 void MainWindow::maximumResolution()
@@ -466,6 +507,7 @@ void MainWindow::showFrame(const cv::Mat &frame)
     qimg = QImage(tmpMat.data,tmpMat.cols,tmpMat.rows,tmpMat.cols*3,QImage::Format_RGB888);
 
     // Resize the QImage for keep the mainwindow small (because the minimum resolution of the webcam is used for the fixed size window)
+
     if(resolutionVal == 1)
     {
         QImage scaled = qimg.scaled(current_w,current_h,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);

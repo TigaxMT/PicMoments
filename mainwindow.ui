@@ -569,6 +569,7 @@
     <addaction name="actionColor_Contours"/>
     <addaction name="actionSobel"/>
     <addaction name="actionCanny_Edges"/>
+    <addaction name="actionNo_Effects"/>
    </widget>
    <widget class="QMenu" name="menuOptions">
     <property name="title">
@@ -623,7 +624,15 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Laplace</string>
+    <string>Sobel</string>
+   </property>
+  </action>
+  <action name="actionNo_Effects">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>No Effects</string>
    </property>
   </action>
  </widget>

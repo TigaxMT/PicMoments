@@ -96,7 +96,7 @@ private:
     cv::VideoWriter rec;
     cv::Mat pic;
     cv::Mat tmpMat;
-    cv::Mat flpPic;
+    cv:: Mat fxPic;
     cv::RNG rng;
 
     std::vector<int> compression_params;
