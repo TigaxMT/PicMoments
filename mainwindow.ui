@@ -573,10 +573,10 @@
      <active>
       <colorrole role="Base">
        <brush brushstyle="SolidPattern">
-        <color alpha="255">
-         <red>255</red>
-         <green>255</green>
-         <blue>255</blue>
+        <color alpha="0">
+         <red>191</red>
+         <green>64</green>
+         <blue>64</blue>
         </color>
        </brush>
       </colorrole>
@@ -593,10 +593,10 @@
      <inactive>
       <colorrole role="Base">
        <brush brushstyle="SolidPattern">
-        <color alpha="255">
-         <red>255</red>
-         <green>255</green>
-         <blue>255</blue>
+        <color alpha="0">
+         <red>191</red>
+         <green>64</green>
+         <blue>64</blue>
         </color>
        </brush>
       </colorrole>
