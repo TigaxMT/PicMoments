@@ -360,8 +360,6 @@ void MainWindow::cannyEdge()
 
     cv::cvtColor(fxPic,pic_gray,cv::COLOR_BGR2GRAY);
 
-    fxPic.release();
-
     cv::blur(pic_gray,fxPic,cv::Size(3,3));
 
     cv::Canny(fxPic,fxPic,threshold,threshold*3,3);
@@ -401,19 +399,13 @@ void MainWindow::colorContours()
 
     cv::cvtColor(fxPic,pic_gray,cv::COLOR_BGR2GRAY);
 
-    fxPic.release();
-
     cv::blur(pic_gray,pic_gray,cv::Size(3,3));
 
     cv::Canny(pic_gray,canny,threshold,threshold*2,3);
 
-    pic_gray.release();
-
     cv::findContours(canny,contours,hierarchy,cv::RETR_TREE,cv::CHAIN_APPROX_SIMPLE,cv::Point(0,0));
 
     fxPic = cv::Mat::zeros(canny.size(),CV_8UC3);
-
-    canny.release();
 
     for(size_t i = 0;i < contours.size();i++)
     {
@@ -455,8 +447,6 @@ void MainWindow::sobel()
     cv::GaussianBlur(fxPic,fxPic,cv::Size(3,3),0,0,cv::BORDER_DEFAULT);
 
     cv::cvtColor(fxPic,pic_gray,cv::COLOR_BGR2GRAY);
-
-    fxPic.release();
 
     cv::Sobel(pic_gray,grad_x,CV_16S,1,0,3,1,0,cv::BORDER_DEFAULT);
     cv::Sobel(pic_gray,grad_y,CV_16S,0,1,3,1,0,cv::BORDER_DEFAULT);
