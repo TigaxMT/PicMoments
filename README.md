@@ -7,7 +7,7 @@ Written on C++ and using Opencv library and QT Framework
 
 I recommend compiling the code on its own, but if you want the software ready, I've compile an .exe 
 
-To download it click here-> http://www.mediafire.com/file/ia5r1sjkci3j53l/PicMoments.exe 
+To download it click here-> http://www.mediafire.com/file/lrpnecgczfa7b7r/PicMoments+V1.0.7.exe
 
 I did the zip installer with the NSIS tool
 
