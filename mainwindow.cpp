@@ -29,7 +29,7 @@ MainWindow::MainWindow(QWidget *parent) :
     timer(this)
 {
     ui->setupUi(this);
-    ui->menuBar->setStyleSheet("color: white");
+    ui->menuBar->setStyleSheet("color: red");
     ui->stopRecBtn->setVisible(false);
 
     // set the maximum resolution of webcam supports
@@ -105,7 +105,7 @@ void MainWindow::capture()
         {
             cv::imwrite(intToString(),fxPic,compression_params);
 
-            ui->statusBar->setStyleSheet("color: white");
+            ui->statusBar->setStyleSheet("color: red");
             ui->statusBar->showMessage("Pic Captured",500);
         }
         else
@@ -124,7 +124,7 @@ void MainWindow::capture()
 
             // Show a message in the statusbar for 1/2 sec
 
-            ui->statusBar->setStyleSheet("color: white");
+            ui->statusBar->setStyleSheet("color: red");
             ui->statusBar->showMessage("Pic Captured",500);
         }
 
@@ -310,7 +310,7 @@ void MainWindow::noEffects()
 
         threshExec = false;
 
-        ui->menuBar->setStyleSheet("color: white");
+        ui->menuBar->setStyleSheet("color: red");
     }
 
     ui->actionColor_Contours->setChecked(false);
@@ -387,12 +387,12 @@ void MainWindow::colorContours()
 
     threshold = threshCtrl->getSliderVal();
 
-    ui->menuBar->setStyleSheet("color: white");
+    ui->menuBar->setStyleSheet("color: red");
     ui->actionColor_Contours->disconnect(ui->actionColor_Contours,&QAction::triggered,this,&MainWindow::colorContours);
 
     cv::Mat pic_gray,canny;
 
-    std::vector<std::vector<cv::Point>> contours;
+    std::vector<std::vector<cv::Point> > contours;
     std::vector<cv::Vec4i> hierarchy;
 
     cv::flip(pic,fxPic,1);
@@ -429,7 +429,7 @@ void MainWindow::sobel()
 
         threshExec = false;
 
-        ui->menuBar->setStyleSheet("color: white");
+        ui->menuBar->setStyleSheet("color: red");
     }
 
     ui->actionColor_Contours->setChecked(false);
