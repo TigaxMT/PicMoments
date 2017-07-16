@@ -8,7 +8,7 @@ Written on C++ and using Opencv library and QT Framework
 # Linux installation (2 ways)
 
 ## First Way (Pre-compiled executable): 
-This way probably give a better GUI interface than second way. But the second is more recommended
+This way probably give a better GUI interface than second way. But the second is recommended
 
 1 - Download this .zip -> http://www.mediafire.com/file/zvb5nya8bait4ha/PicMoments.zip
 
