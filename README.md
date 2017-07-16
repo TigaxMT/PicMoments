@@ -46,7 +46,7 @@ This is the recommnended way, but GUI interface is a little bit bad (for now)
 
 I recommend compiling the code on its own, but if you want the software ready, I've compile an .exe 
 
-To download it click here-> http://www.mediafire.com/file/lrpnecgczfa7b7r/PicMoments+V1.0.7.exe
+To download it click here-> http://www.mediafire.com/file/1xe3iate46ippbg/PicMoments+V1.0.7.exe
 
 I did the zip installer with the NSIS tool
 
