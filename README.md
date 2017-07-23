@@ -5,22 +5,7 @@ Written on C++ and using Opencv library and QT Framework
 
 # Installations
 
-# Linux installation (2 ways)
-
-## First Way (Pre-compiled executable): 
-This way probably give a better GUI interface than second way. But the second is recommended
-
-1 - Download this .zip -> http://www.mediafire.com/file/zvb5nya8bait4ha/PicMoments.zip
-
-2 - Unpack .zip file, rgiht-click on the .zip and extract here
-
-3 - Now install the dependencies, open the terminal (CTRL + T) and copy and paste this command(for Debian/Ubuntu/Mint):
-   `sudo apt-get install build-essential libopencv-dev qt5-default qtdeclarative5-dev qml-module-qtquick-controls`
-
-4 - Finally open the extracted folder and double click on PicMoments executable file.
-
-## Second Way (Compile and Run):
-This is the recommnended way, but GUI interface is a little bit bad (for now)
+# Linux installation
 
 1 - Download .zip file or clone this repository, to clone(You need to install git) go to a directory and open a terminal         right there, for example:
    `git clone https://github.com/TigaxMT/PicMoments.git`
@@ -29,9 +14,33 @@ This is the recommnended way, but GUI interface is a little bit bad (for now)
    For example if you unpack the .zip file or clone on the Documents you type this command on terminal:
    `cd Documents/PicMoments`
 
-2 - Install the dependencies: `sudo apt-get install cmake build-essential libopencv-dev qt5-default qtdeclarative5-dev qml-module-qtquick-controls`
-
+2 - Install the dependencies(Debian Based): `sudo apt-get install cmake build-essential libopencv-dev qt5-default qtdeclarative5-dev qml-module-qtquick-controls`
+    
 3 - Now we're going to compile the software, copy and paste this commands one by one:
+    
+   Note: Before, you need to verify if /usr/local/share/OpenCV directory exists.
+          
+   If not exist verify this: /usr/lib/OpenCV , if this directory exists so change the export path, like this:
+          
+```
+    export OpenCV3_DIR=/usr/lib/OpenCV
+   
+    cmake .
+   
+    make
+        
+```
+        
+   Now, if when you run make have an error try this:
+        
+```
+    export OpenCV3_DIR=/usr/lib64/OpenCV
+   
+    cmake .
+   
+    make
+```
+   But if /usr/local/share/OpenCV exists just do like this:     
 ```
    export OpenCV3_DIR=/usr/local/share/OpenCV
    
@@ -39,6 +48,7 @@ This is the recommnended way, but GUI interface is a little bit bad (for now)
    
    make
 ```
+
 
 4 - Finally , double click on the PicMoments executable (you find it on the PicMoments folder)  
 
