@@ -565,7 +565,7 @@
      <x>0</x>
      <y>0</y>
      <width>685</width>
-     <height>22</height>
+     <height>20</height>
     </rect>
    </property>
    <property name="palette">
@@ -813,7 +813,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>About PicYou...</string>
+    <string>About PicMoments...</string>
    </property>
   </action>
   <action name="actionColor_Contours">

@@ -38,8 +38,8 @@ find_package(Qt5 REQUIRED
     Widgets
 )
 
-qt5_wrap_ui( UI_HEADERS mainwindow.ui about.ui threshold.ui videosettings.ui)
-qt5_add_resources( QRCS icons.qrc )
-add_executable( ${PROJECT_NAME} main.cpp mainwindow.cpp about.cpp threshold.cpp videosettings.cpp ${UI_HEADERS} ${QRCS} )
+qt5_wrap_ui( UI_HEADERS src/mainwindow.ui src/about.ui src/threshold.ui src/videosettings.ui)
+qt5_add_resources( QRCS src/icons.qrc )
+add_executable( ${PROJECT_NAME} src/main.cpp src/mainwindow.cpp src/about.cpp src/threshold.cpp src/videosettings.cpp ${UI_HEADERS} ${QRCS} )
 target_link_libraries( ${PROJECT_NAME} Qt5::Widgets )
 target_link_libraries( ${PROJECT_NAME} ${OpenCV_LIBS} )

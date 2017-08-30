@@ -15,7 +15,9 @@ Written on C++ and using Opencv library and QT Framework
    `cd Documents/PicMoments`
 
 2 - Install the dependencies(Debian Based): `sudo apt-get install cmake build-essential libopencv-dev qt5-default qtdeclarative5-dev qml-module-qtquick-controls`
-    
+     
+    Install the dependencies(RedHat, Fedora) : `sudo dnf install automake gcc gcc-c++ kernel-devel make cmake opencv opencv-core opencv-devel qt5 qt5-devel qt5-qtbase qt5-qtbase-devel qt5-qtdeclarative qt5-qtdeclarative-devel`    
+
 3 - Now we're going to compile the software, copy and paste this commands one by one:
     
    Note: Before, you need to verify if /usr/local/share/OpenCV directory exists.

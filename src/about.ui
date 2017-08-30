@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>About PicYou</string>
+   <string>About PicMoments</string>
   </property>
   <widget class="QLabel" name="copyright">
    <property name="geometry">
@@ -23,7 +23,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;PicMoments - A simples program to take photos and record videos with effects&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;Copyright (C) 2017 Tiago Martins&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;This program comes with ABSOLUTELY NO WARRANTY. &lt;/p&gt;&lt;p align=&quot;center&quot;&gt;This is free software, and you are welcome to redistribute it under certain conditions. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;PicMoments - A simples program to take &lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;photos and record videos with effects&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;Copyright (C) 2017 Tiago Martins&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;This program comes with ABSOLUTELY NO WARRANTY. &lt;/p&gt;&lt;p align=&quot;center&quot;&gt;This is free software, and you are welcome &lt;/p&gt;&lt;p align=&quot;center&quot;&gt;to redistribute it under certain conditions. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </widget>
   <widget class="QPushButton" name="closeBtn">
