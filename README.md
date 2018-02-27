@@ -70,4 +70,4 @@ I did the zip installer with the NSIS tool
 
 # Contact Me
 
-Email: thebigger018@protonmail.com
+Email: ttiagommartins127@gmail.com
