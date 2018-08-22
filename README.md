@@ -3,6 +3,10 @@ PicYou is a simple program to take photos and recordo videos with effects or not
  
 Written on C++ and using Opencv library and QT Framework
 
+# Warning
+
+This project will no longer be continued. Any errors or functionality that you want to correct or implement will be welcome, but I will not work on this project anymore because I am focused on web development. Thanks for everything :)
+
 # Installations
 
 # Linux installation
