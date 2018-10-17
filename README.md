@@ -74,4 +74,4 @@ I did the zip installer with the NSIS tool
 
 # Contact Me
 
-Email: ttiagommartins127@gmail.com
+Email: tiagoDeHa@protonmail.com
