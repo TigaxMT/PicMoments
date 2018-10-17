@@ -1,5 +1,5 @@
-# PicYou
-PicYou is a simple program to take photos and recordo videos with effects or not
+# PicMoments
+Simple program to take photos and recordo videos with effects or not
  
 Written on C++ and using Opencv library and QT Framework
 
