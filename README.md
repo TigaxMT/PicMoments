@@ -1,5 +1,8 @@
-# PicYou
-PicYou is a simple program to take photos and recordo videos with effects or not
+# PicMoments
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/b0ae340159cc476a8070d4339ac920d5)](https://app.codacy.com/app/TigaxMT_2/PicMoments?utm_source=github.com&utm_medium=referral&utm_content=TigaxMT/PicMoments&utm_campaign=Badge_Grade_Dashboard)
+
+Simple program to take photos and recordo videos with effects or not
  
 Written on C++ and using Opencv library and QT Framework
 
@@ -74,4 +77,4 @@ I did the zip installer with the NSIS tool
 
 # Contact Me
 
-Email: ttiagommartins127@gmail.com
+Email: tiagoDeHa@protonmail.com
